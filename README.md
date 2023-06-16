@@ -15,4 +15,4 @@
 * **git**
 
 ## Git hub PAGES:
-* https://mazoriksay.github.io/mesto-react-auth
+* https://mazoriksay.github.io/react-mesto-auth/
