@@ -26,22 +26,20 @@ function EditAvatarPopup({isOpen, onClose, onUpdateAvatar}) {
             onSubmit={handleSubmit}
             btnValue="Сохранить"
         >
-            <>
-                <label className="popup__field">
-                    <input 
-                        id="link-input-avatar" 
-                        className="popup__input" 
-                        type="url" 
-                        name="avatar" 
-                        placeholder="Ссылка на картинку" 
-                        required={true} 
-                        minLength="1"
-                        ref={avatarReferal}
+            <label className="popup__field">
+                <input 
+                    id="link-input-avatar" 
+                    className="popup__input" 
+                    type="url" 
+                    name="avatar" 
+                    placeholder="Ссылка на картинку" 
+                    required={true} 
+                    minLength="1"
+                    ref={avatarReferal}
 
-                    />
-                    <span className="popup__input-error link-input-avatar-error"></span>
-                </label>   
-            </>
+                />
+                <span className="popup__input-error link-input-avatar-error"></span>
+            </label>   
         </PopupWithForm>
     )
 }

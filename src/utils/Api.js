@@ -95,4 +95,4 @@ export const api = new Api({
       authorization: 'b4997ac3-87d8-4b2f-aabd-f23b0e31024b',
       'Content-Type': 'application/json'
     }
-  });
+});

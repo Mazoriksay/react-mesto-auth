@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ok from "../images/galochka.svg";
 import notOk from "../images/krestik.svg";
 
-function Register({ handleOpenPopup, insertAlarm }) {
+function Register({ openInfoTooltip, insertAlarm }) {
     const [formValue, setFormValue] = useState({
         email: '',
         password: ''
@@ -27,28 +27,27 @@ function Register({ handleOpenPopup, insertAlarm }) {
         evt.preventDefault();
         auth.register(formValue).then(() => {
             insertAlarm({logo: ok, text: 'Вы успешно зарегистрировались!'});
-            navigate('/login', {replace:true});
+            navigate('/sign-in', {replace:true});
         })
         .catch(() => {
             insertAlarm({logo: notOk, text: 'Что-то пошло не так! Попробуйте ещё раз.'});
         })
-        .finally(() => handleOpenPopup())
+        .finally(() => openInfoTooltip())
     }
 
     return (
         <>
-            <Header />
-            <Auth
-                title='Регистрация'
-                btnValue='Зарегистрироваться'
-                formName='reg'
-                onSubmit={handleSubmit}
-                onChange={handleChange}
-                email={formValue.email}
-                password={formValue.password}
-            >
-                <Link className='auth__crossing' to='/sign-in'>Уже зарегистрированы? Войти</Link>
-            </Auth>
+        <Auth
+            title='Регистрация'
+            btnValue='Зарегистрироваться'
+            formName='reg'
+            onSubmit={handleSubmit}
+            onChange={handleChange}
+            email={formValue.email}
+            password={formValue.password}
+        >
+            <Link className='auth__crossing' to='/sign-in'>Уже зарегистрированы? Войти</Link>
+        </Auth>
         
         </>
     )

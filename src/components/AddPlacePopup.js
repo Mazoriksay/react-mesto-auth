@@ -35,7 +35,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
                     type="text" 
                     name="name" 
                     placeholder="Название" 
-                    required={true} 
+                    required 
                     minLength="2" 
                     maxLength="30" 
                     ref={placeReferal}

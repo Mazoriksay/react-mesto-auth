@@ -29,10 +29,7 @@ class Auth {
         return this._request('/signup', {
             method: 'POST',
             headers: this._headers,
-            body: JSON.stringify({
-                "password": password,
-                "email": email
-            })
+            body: JSON.stringify({email, password}) 
         });
     }
 
@@ -40,10 +37,7 @@ class Auth {
         return this._request('/signin', {
             method: 'POST',
             headers: this._headers,
-            body: JSON.stringify({
-                "password": password,
-                "email": email
-            })
+            body: JSON.stringify({email, password}) 
         })
         .then((data) => {
             localStorage.setItem('jwt', data.token); 
@@ -56,4 +50,4 @@ export const auth = new Auth({
     headers: {
       'Content-Type': 'application/json'
     }
-  });
+});

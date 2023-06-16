@@ -22,42 +22,41 @@ function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-    // const [isDeletePlacePopupOpen, setIsDeletePlacePopupOpen] = useState(false);
     const [selectedCard, setSelectedCard] = useState(null);
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState({});
     const [cards, setCards] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [email, setEmail] = useState('');
-    const [alarm, setAlarm] = useState({
+    const [infoTooltipMessage, setInfoTooltipMessage] = useState({
         logo: '',
         text: ''
     });
     const navigate = useNavigate();
 
     useEffect(() => {
+       if (!isLoggedIn) return;
         api.getUserInfo()
         .then(res => {
             setCurrentUser(res);
         })
         .catch((err) => console.log(err));
-    }, []);
 
-    useEffect(() => {
-        Promise.all([api.getInitialCards()])
-        .then(res => {
-            setCards(...cards, res[0])
+        api.getInitialCards()
+        .then((res) => {
+            setCards(res)
         })
         .catch((err) => console.log(err));
-    }, []);
+        
+    }, [isLoggedIn]);
 
     useEffect(() => {
         handleTokenCheck();
     }, []);
 
     const handleTokenCheck = () => {
-        if (localStorage.getItem('jwt')) {
-            const jwt = localStorage.getItem('jwt');
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
             auth.checkToken(jwt).then((res) => {
                 if (res) {
                     setIsLoggedIn(true);
@@ -83,7 +82,7 @@ function App() {
     }
 
     const insertAlarm = (data) => {
-        setAlarm(data);
+        setInfoTooltipMessage(data);
     }
 
     const handleEditProfileClick = () => {
@@ -98,11 +97,6 @@ function App() {
         setIsAddPlacePopupOpen(true);
     }
 
-    
-    // const handleDeletePlaceClick = () => {
-    //     setIsDeletePlacePopupOpen(true);
-    // }
-
     const handleInfoTooltipOpen = () => {
         setIsInfoTooltipOpen(true);
     }
@@ -111,7 +105,6 @@ function App() {
         setIsEditProfilePopupOpen(false);
         setIsEditAvatarPopupOpen(false);
         setIsAddPlacePopupOpen(false);
-        // setIsDeletePlacePopupOpen(false);
         setSelectedCard(null);
         setIsInfoTooltipOpen(false);
     }
@@ -168,30 +161,28 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}>
             <div className="body">
                 <div className="page">
+                    <Header onSignOut={signOut} email={email} />
                     <Routes>
                         <Route 
                             path='/'
                             element={
-                                <>
-                                    <Header onSignOut={signOut} email={email} />
-                                    <ProtectedRoute 
-                                        element={Main}
-                                        onEditProfile={handleEditProfileClick}
-                                        onEditAvatar={handleEditAvatarClick}
-                                        onAddPlace={handleAddPlaceClick}
-                                        onCardClick={handleCardClick}
-                                        onTrashClick={handleDeleteClick}
-                                        onLikeClick={handleLikeClick}
-                                        cards={cards}
-                                        isLoggedIn={isLoggedIn}
-                                    />
-                                </>
+                                <ProtectedRoute 
+                                    element={Main}
+                                    onEditProfile={handleEditProfileClick}
+                                    onEditAvatar={handleEditAvatarClick}
+                                    onAddPlace={handleAddPlaceClick}
+                                    onCardClick={handleCardClick}
+                                    onTrashClick={handleDeleteClick}
+                                    onLikeClick={handleLikeClick}
+                                    cards={cards}
+                                    isLoggedIn={isLoggedIn}
+                                 />
                             }
                             
                         />
                         <Route 
                             path='sign-up'
-                            element={<Register handleOpenPopup={handleInfoTooltipOpen} insertAlarm={insertAlarm} />}
+                            element={<Register openInfoTooltip={handleInfoTooltipOpen} insertAlarm={insertAlarm} />}
                         />
                         <Route 
                             path='sign-in'
@@ -202,33 +193,31 @@ function App() {
                             element={isLoggedIn ? <Navigate to='/' replace /> : <Navigate to='sign-in' replace/>}
                         />
                     </Routes>
-                    {/* <Header /> */}
-                    {/* <Main 
-                        onEditProfile={handleEditProfileClick}
-                        onEditAvatar={handleEditAvatarClick}
-                        onAddPlace={handleAddPlaceClick}
-                        onCardClick={handleCardClick}
-                        onTrashClick={handleDeleteClick}
-                        onLikeClick={handleLikeClick}
-                        cards={cards}
-                    /> */}
-
                     <Footer />
-                    <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handleCloseAllPopups} onUpdateUser={handleUpdateUser} />
-                    <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handleCloseAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-                    <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handleCloseAllPopups} onAddPlace={handlePlaceSubmit} />
-                    <InfoTooltip isOpen={isInfoTooltipOpen} onClose={handleCloseAllPopups} alarm={alarm} />
-                    {/* <PopupWithForm
-                        name="delete"
-                        title="Вы уверены?"
-                        isOpen={isDeletePlacePopupOpen}
-                        onClose={handleCloseAllPopups}
-                        btnValue="Удалить"
-                    /> */}
-                    
+                    <EditProfilePopup 
+                        isOpen={isEditProfilePopupOpen} 
+                        onClose={handleCloseAllPopups} 
+                        onUpdateUser={handleUpdateUser} 
+                    />
+                    <EditAvatarPopup 
+                        isOpen={isEditAvatarPopupOpen} 
+                        onClose={handleCloseAllPopups} 
+                        onUpdateAvatar={handleUpdateAvatar} 
+                    />
+                    <AddPlacePopup 
+                        isOpen={isAddPlacePopupOpen} 
+                        onClose={handleCloseAllPopups} 
+                        onAddPlace={handlePlaceSubmit} 
+                    />
+                    <InfoTooltip 
+                        isOpen={isInfoTooltipOpen} 
+                        onClose={handleCloseAllPopups} 
+                        infoTooltipMessage={infoTooltipMessage} 
+                    />
                     <ImagePopup
                         card={selectedCard}
                         onClose={handleCloseAllPopups}
+                        name="infoTooltip"
                     /> 
                     
                 </div>

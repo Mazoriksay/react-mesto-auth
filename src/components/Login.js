@@ -37,18 +37,15 @@ function Login({handleLogin}) {
     }
 
     return (
-        <>
-            <Header />
-            <Auth   
-                title='Вход'
-                btnValue='Войти'
-                formName='login'
-                onSubmit={handleSubmit}
-                onChange={handleChange}
-                email={formValue.email}
-                password={formValue.password}
-            />
-        </>
+        <Auth   
+            title='Вход'
+            btnValue='Войти'
+            formName='login'
+            onSubmit={handleSubmit}
+            onChange={handleChange}
+            email={formValue.email}
+            password={formValue.password}
+        />
     )
 }
 

@@ -20,7 +20,7 @@ function Auth({title, btnValue, formName, children, onSubmit, onChange, email, p
                 </input>
                 <input
                     className='auth__input'
-                    type='text'
+                    type='password'
                     name='password'
                     placeholder='Пароль'
                     required={true}

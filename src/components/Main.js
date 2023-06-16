@@ -4,8 +4,18 @@ import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 
-function Main({onEditAvatar, onEditProfile, onAddPlace, onCardClick, onTrashClick, onLikeClick, cards,isLoggedIn}) {
-    const currentUser = useContext(CurrentUserContext); 
+function Main({onEditAvatar, onEditProfile, onAddPlace, onCardClick, onTrashClick, onLikeClick, cards}) {
+    const currentUser = useContext(CurrentUserContext);
+    const cardsElements = cards.map((card) => (
+        <Card
+            card={card}
+            key={card._id}
+            onCardClick={onCardClick}
+            onTrashClick={onTrashClick}
+            onLikeClick={onLikeClick}
+        />
+    )); 
+    
     return (
         <main className="content">
             <section className="profile">
@@ -20,15 +30,7 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, onCardClick, onTrashClic
             </section>
             <section className="gallery">
                 <ul className="list">
-                    {cards.map((card) => (
-                        <Card
-                            card={card}
-                            key={card._id}
-                            onCardClick={onCardClick}
-                            onTrashClick={onTrashClick}
-                            onLikeClick={onLikeClick}
-                        />
-                    ))}
+                    {cardsElements}
                 </ul>
             </section>
         </main>
